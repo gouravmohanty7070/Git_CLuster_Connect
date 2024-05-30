@@ -1,8 +1,12 @@
 from django.shortcuts import redirect
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
-from .models import Repository
+from .models import Repository,ClusterDetails
 import requests
+
+def cluster_data(request):
+    clusters = ClusterDetails.objects.all().values()
+    return JsonResponse(list(clusters), safe=False)
 
 def github_connect(request):
     if 'code' in request.GET:
@@ -39,3 +43,4 @@ def github_connect(request):
     else:
         github_auth_url = f'https://github.com/login/oauth/authorize?client_id={settings.GITHUB_CLIENT_ID}&scope=repo'
         return redirect(github_auth_url)
+
